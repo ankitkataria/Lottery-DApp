@@ -39,6 +39,37 @@ window.makeGuess = function() {
   return false;
 }
 
+window.closeGame = function() {
+  Lottery.deployed().then(function(contractInstance) {
+    contractInstance.closeGame.call({from: owner, gas: 140000}).then(function(result) {
+      showEndGame();
+    });
+  });
+  return false;
+}
+
+window.transferFunds = function() {
+  Lottery.deployed().then(function(contractInstance) {
+    contractInstance.getPrice({from: owner, gas: 140000}).then(function(result) {
+      populateAccount();
+    });
+  });
+}
+
+var showEndGame = function() {
+  $('.close-game-btn').toggleClass('display-none');
+  $('.winner-info').toggleClass('display-none');
+
+  Lottery.deployed().then(function(contractInstance) {
+    contractInstance.winningGuess.call().then(function(result) {
+      $('#winning-guess').html(result);
+    });
+    contractInstance.winnerAddress.call({gas: 140000}).then(function(result) {
+      $('#winner-address').html(result);
+    });
+  });
+}
+
 var populateAccount = function () {
   Lottery.deployed().then(function(contractInstance) {
     contractInstance.userTokens.call(account).then(function(r) {

@@ -27,14 +27,14 @@
         <h2>Buy Tokens</h2>
         <form>
           <input id="token-amount" type="number">
-          <button onclick="return buyTokens()" class="btn btn-primary"> Buy </button>
+          <button onclick="return buyTokens()" class="btn btn-primary" id="token-amount-btn"> Buy </button>
         </form>
       </div>
       <div>
         <h2> Make Guess </h2>
         <form>
           <input id="user-guess" type="number" min="1" max="1000000">
-          <button onclick="return makeGuess()" class="btn btn-primary"> Guess </button>
+          <button onclick="return makeGuess()" class="btn btn-primary" id="user-guess-btn"> Guess </button>
         </form>
       </div>
       <h2> Contract </h2>
@@ -51,10 +51,13 @@
         <h2> Close Game Info </h2>
         <div>
           <div>
-            <span class="bold">Winner:</span> <span class="winner-address"> </span>
+            <span class="bold">Winner:</span> <span id="winner-address"> </span>
           </div>
           <div>
-            <span class="bold">Winning Guess:</span> <span class="winning-guess"></span>
+            <span class="bold">Winning Guess (SHA3):</span> <span id="winning-guess"></span>
+          </div>
+          <div class="transfer-funds-container">
+            <button class="btn btn-primary" onclick="return transferFunds()"> Transfer Funds </button>
           </div>
         </div>
       </div>

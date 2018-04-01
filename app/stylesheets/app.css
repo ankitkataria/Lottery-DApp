@@ -48,6 +48,10 @@ button {
   justify-content: center;
 }
 
+.transfer-funds-container {
+  text-align: center;
+}
+
 .bold {
   font-weight: 900;
 }

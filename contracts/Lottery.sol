@@ -15,7 +15,7 @@ contract Lottery {
   address[] public userAddresses;
 
 	address public owner;
-	bytes32 public winningGuessSha3;
+	bytes32 winningGuessSha3;
 
 	//contructor function
 	function Lottery(uint _winningGuess) {
@@ -32,6 +32,10 @@ contract Lottery {
   // returns the guess made by user so far
   function userGuesses(address _user) view public returns(uint[]) {
     return users[_user].guess;
+  }
+
+  function winningGuess() view public returns(bytes32) {
+    return winningGuessSha3;
   }
 
   // to add a new user to the contract to make guesses
@@ -69,15 +73,15 @@ contract Lottery {
 	}
 
 	// doesn't allow anyone to buy anymore tokens
-	function closeGame() {
+	function closeGame() returns(address){
     // can only be called my the owner of the contract
 		require(owner == msg.sender);
     address winner = winnerAddress();
-    getPrice(winner);
+    return winner;
 	}
 
 	// returns the address of the winner once the game is closed
-	function winnerAddress() returns(address){
+	function winnerAddress() returns(address) {
     for(uint i = 0; i < userAddresses.length; i++) {
       User user= users[userAddresses[i]];
 
@@ -92,9 +96,21 @@ contract Lottery {
 	}
 
 	// sends 50% of the ETH in contract to the winner and rest of it to the owner
-	function getPrice(winner) {
+	function getPrice() returns (uint){
     // destroys the contact and sends all the money to the address mentioned
-    selfdestruct(winner);
-	}
+    require(owner == msg.sender);
+    address winner = winnerAddress();
+    if (winner == owner) {
+      owner.transfer(address(this).balance);
+    } else {
+      // returns the half the balance of the contract
+      uint toTransfer = address(this).balance / 2;
 
+      // transfer 50% to the winner
+      winner.transfer(toTransfer);
+      // transfer rest of the balance to the owner of the contract
+      owner.transfer(address(this).balance);
+    }
+    return address(this).balance;
+	}
 }
