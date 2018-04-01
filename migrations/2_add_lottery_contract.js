@@ -1,4 +1,4 @@
-var Lottery = artifact.require("Lottery");
+var Lottery = artifacts.require("Lottery");
 // put the winning guess
 var winningGuess = 50000;
 
