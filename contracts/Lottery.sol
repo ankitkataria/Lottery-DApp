@@ -24,9 +24,16 @@ contract Lottery {
 		winningGuessSha3 = keccak256(_winningGuess);
 	}
 
+  // returns the number of tokens purchased by an account
+  function userTokens(address _user) view public returns (uint) {
+    return users[_user].tokensBought;
+  }
+
   // to add a new user to the contract to make guesses
-  function makeUser() {
-    users[msg.sender] = User(msg.sender, 0, new uint[](0));
+  function makeUser() public{
+    // users[msg.sender] = User(msg.sender, 0, new uint[](0));
+    users[msg.sender].userAddress = msg.sender;
+    users[msg.sender].tokensBought = 0;
     userAddresses.push(msg.sender);
   }
 
@@ -35,7 +42,7 @@ contract Lottery {
   // money can be released using selfdestruct(address)
 	function addTokens() payable {
     uint present = 0;
-    uint tokensToAdd = msg.value;
+    uint tokensToAdd = msg.value/(10**18);
 
     for(uint i = 0; i < userAddresses.length; i++) {
       if(userAddresses[i] == msg.sender) {
