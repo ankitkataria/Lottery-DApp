@@ -3,43 +3,62 @@
 <head>
   <title>Lottery</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
 </head>
 <body>
-  <h1>Lottery</h1>
-  <h2> User </h2>
-  <div>
-    User Account: <span id="user-account"> </span>
-  </div>
-  <div>
-    Your Balance: <span id="user-balance"></span>
-  </div>
-  <div>
-    Total Tokens: <span id="user-tokens"></span>
-  </div>
-  <div>
-    Guesses: <span id="user-guesses"> </span>
-  </div>
-  <div>
-    <h2>Buy Tokens</h2>
-    <form>
-      <input id="token-amount" type="number">
-      <button onclick="return buyTokens()"> Buy </button>
-    </form>
-  </div>
-  <div>
-    <h2> Make Guess </h2>
-    <form>
-      <input id="user-guess" type="number" min="1" max="1000000">
-      <button onclick="return makeGuess()"> Guess </button>
-    </form>
-  </div>
-  <h2> Contract </h2>
-  <div>
-    Contract Owner: <span id="contract-owner"> </span>
-  </div>
-  <div>
-    Contract Balance: <span id="contract-balance"> </span>
+  <h1 class="container-fluid lottery-head"> Lottery </h1>
+  <div class="lottery-wrapper">
+    <div class="users-corner container">
+      <h2> User </h2>
+      <div>
+        <span class="bold">User Account:</span>  <span id="user-account"> </span>
+      </div>
+      <div>
+        <span class="bold">Your Balance:</span> <span id="user-balance"></span>
+      </div>
+      <div>
+        <span class="bold">Total Tokens:</span> <span id="user-tokens"></span>
+      </div>
+      <div>
+        <span class="bold">Guesses:</span> <span id="user-guesses"> </span>
+      </div>
+      <div>
+        <h2>Buy Tokens</h2>
+        <form>
+          <input id="token-amount" type="number">
+          <button onclick="return buyTokens()" class="btn btn-primary"> Buy </button>
+        </form>
+      </div>
+      <div>
+        <h2> Make Guess </h2>
+        <form>
+          <input id="user-guess" type="number" min="1" max="1000000">
+          <button onclick="return makeGuess()" class="btn btn-primary"> Guess </button>
+        </form>
+      </div>
+      <h2> Contract </h2>
+      <div>
+        <span class="bold">Contract Owner:</span> <span id="contract-owner"> </span>
+      </div>
+      <div>
+        <span class="bold">Contract Balance:</span> <span id="contract-balance"> </span>
+      </div>
+    </div>
+    <div class="owners-corner">
+      <button onclick="return closeGame()" class="btn btn-primary close-game-btn"> Close Game </button>
+      <div class="winner-info display-none">
+        <h2> Close Game Info </h2>
+        <div>
+          <div>
+            <span class="bold">Winner:</span> <span class="winner-address"> </span>
+          </div>
+          <div>
+            <span class="bold">Winning Guess:</span> <span class="winning-guess"></span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
   <script src="./app.js"></script>
