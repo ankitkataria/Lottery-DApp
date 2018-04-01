@@ -13,18 +13,31 @@ var Lottery = contract(lottery_artifacts);
 var owner;
 var token;
 
+// To buy more tokens, each token costs 1 ether
 window.buyTokens = function() {
   var token_amount = $('#token-amount').val();
 
   Lottery.deployed().then(function(contractInstance) {
     contractInstance.addTokens({from: account, value: web3.toWei(token_amount, 'ether')});
+    populateAccount();
   });
 
-  populateAccount();
-
+  $('#token-amount').val('');
   return false;
 }
 
+// To make a guess, 1 guess = 1 token
+window.makeGuess = function() {
+  var guess = $('#user-guess').val();
+
+  Lottery.deployed().then(function(contractInstance) {
+    contractInstance.makeGuess(guess, {from: account, gas:140000});
+    populateAccount();
+  });
+
+  $('#user-guess').val('');
+  return false;
+}
 
 var populateAccount = function () {
   Lottery.deployed().then(function(contractInstance) {
@@ -32,14 +45,24 @@ var populateAccount = function () {
       $('#user-tokens').html(r.toNumber());
     });
 
+    // updating the balance of the contract and the user acount
     web3.eth.getBalance(account, function(err, res) {
       $('#user-balance').html(web3.fromWei(res.toNumber(), 'ether') + ' ether');
     });
 
     web3.eth.getBalance(contractInstance.address, function(err, res) {
       $('#contract-balance').html(web3.fromWei(res.toNumber(), 'ether') + ' ether');
-    })
+    });
 
+    // updating the user guesses
+    var guesses_string = "";
+    contractInstance.userGuesses.call(account).then(function(guesses) {
+      for(var i = 0; i < guesses.length; i++) {
+        guesses_string += (guesses[i] + ",");
+      }
+
+      $('#user-guesses').html(guesses_string.substr(0, guesses_string.length - 1));
+    });
   });
 }
 
@@ -56,7 +79,9 @@ $( document ).ready(function() {
 
   Lottery.setProvider(web3.currentProvider);
 
+  // total accounts
   window.accounts = web3.eth.accounts;
+  // account used for making guesses and buying tokens
   window.account = web3.eth.accounts[1];
 
   Lottery.deployed().then(function(contractInstance) {
@@ -66,10 +91,14 @@ $( document ).ready(function() {
       $('#contract-owner').html(owner)
     });
 
-    contractInstance.makeUser({gas: 140000, from: account});
+    contractInstance.users.call(account).then(function(result) {
+      if(result[0] == "0x0000000000000000000000000000000000000000")
+        contractInstance.makeUser({gas: 140000, from: account});
+    });
 
     $('#user-account').html(account);
+
+    populateAccount();
   });
 
-  populateAccount();
 });

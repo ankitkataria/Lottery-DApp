@@ -29,16 +29,20 @@ contract Lottery {
     return users[_user].tokensBought;
   }
 
+  // returns the guess made by user so far
+  function userGuesses(address _user) view public returns(uint[]) {
+    return users[_user].guess;
+  }
+
   // to add a new user to the contract to make guesses
   function makeUser() public{
-    // users[msg.sender] = User(msg.sender, 0, new uint[](0));
     users[msg.sender].userAddress = msg.sender;
     users[msg.sender].tokensBought = 0;
     userAddresses.push(msg.sender);
   }
 
 	// function to add tokens to the user that calls the contract
-  // the the money sent using a payable function is held in the contract
+  // the money sent using a payable modifier is held in the contract
   // money can be released using selfdestruct(address)
 	function addTokens() payable {
     uint present = 0;
@@ -59,7 +63,7 @@ contract Lottery {
 
 	// function to generate the random number that wins
 	function makeGuess(uint _userGuess) {
-    require(_userGuess < 1000000);
+    require(_userGuess < 1000000 && users[msg.sender].tokensBought > 0);
     users[msg.sender].guess.push(_userGuess);
     users[msg.sender].tokensBought--;
 	}
@@ -69,7 +73,7 @@ contract Lottery {
     // can only be called my the owner of the contract
 		require(owner == msg.sender);
     address winner = winnerAddress();
-    // getPrice(winner);
+    getPrice(winner);
 	}
 
 	// returns the address of the winner once the game is closed
@@ -88,8 +92,9 @@ contract Lottery {
 	}
 
 	// sends 50% of the ETH in contract to the winner and rest of it to the owner
-	// function getPrice(winner) {
-
-	// }
+	function getPrice(winner) {
+    // destroys the contact and sends all the money to the address mentioned
+    selfdestruct(winner);
+	}
 
 }
