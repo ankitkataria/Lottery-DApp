@@ -1,5 +1,5 @@
 var Lottery = artifacts.require("Lottery");
-// put the winning guess
+// the winning guess, to be put the owner
 var winningGuess = 50000;
 
 module.exports = function(deployer) {

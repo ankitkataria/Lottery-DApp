@@ -1,19 +1,19 @@
-// Import the page's CSS. Webpack will know what to do with it.
+// import the page's CSS. Webpack will know what to do with it.
 import "../stylesheets/app.css";
 
-// Import libraries we need.
+// import libraries we need.
 import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract'
 
-// Import our contract artifacts and turn them into usable abstractions.
+// import our contract artifacts and turn them into usable abstractions.
 import lottery_artifacts from '../../build/contracts/Lottery.json'
 
-// Lottery is our usable abstraction, which we'll use through the code below.
+// lottery is our usable abstraction, which we'll use through the code below.
 var Lottery = contract(lottery_artifacts);
 var owner;
 var token;
 
-// To buy more tokens, each token costs 1 ether
+// to buy more tokens, each token costs 1 ether
 window.buyTokens = function() {
   var token_amount = $('#token-amount').val();
 
@@ -42,6 +42,8 @@ window.makeGuess = function() {
 window.closeGame = function() {
   Lottery.deployed().then(function(contractInstance) {
     contractInstance.closeGame.call({from: owner, gas: 140000}).then(function(result) {
+      $('#token-amount-btn').attr('disabled', 'disabled');
+      $('#user-guess-btn').attr('disabled', 'disabled');
       showEndGame();
     });
   });
@@ -52,6 +54,8 @@ window.transferFunds = function() {
   Lottery.deployed().then(function(contractInstance) {
     contractInstance.getPrice({from: owner, gas: 140000}).then(function(result) {
       populateAccount();
+      $('#close-game-btn').attr('disabled', 'disabled');
+      $('#transfer-funds-btn').attr('disabled', 'disabled');
     });
   });
 }
@@ -98,7 +102,6 @@ var populateAccount = function () {
 }
 
 $( document ).ready(function() {
-  // sometimes the webbrowser loads its own web3
   // set the web3 provider if not present
   if (typeof web3 !== 'undefined') {
     console.warn("Using web3 detected from external source like Metamask")

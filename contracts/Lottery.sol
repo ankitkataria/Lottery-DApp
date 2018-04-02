@@ -1,8 +1,8 @@
 pragma solidity ^0.4.17;
-//the pragma line is the preprocessor directive, tells the version of solidity
+//the pragma line is the preprocessor directive, tells the version of solidity compiler
 
 contract Lottery {
-	//struct is used to store the user information
+	//struct used to store the user information
 	struct User {
 		address userAddress;
 		uint tokensBought;
@@ -34,6 +34,7 @@ contract Lottery {
     return users[_user].guess;
   }
 
+  // returns the winning guess
   function winningGuess() view public returns(bytes32) {
     return winningGuessSha3;
   }
@@ -46,7 +47,7 @@ contract Lottery {
   }
 
 	// function to add tokens to the user that calls the contract
-  // the money sent using a payable modifier is held in the contract
+  // the money held in contract is sent using a payable modifier function
   // money can be released using selfdestruct(address)
 	function addTokens() payable {
     uint present = 0;
@@ -65,7 +66,7 @@ contract Lottery {
     }
 	}
 
-	// function to generate the random number that wins
+	// to add user guesses
 	function makeGuess(uint _userGuess) {
     require(_userGuess < 1000000 && users[msg.sender].tokensBought > 0);
     users[msg.sender].guess.push(_userGuess);
@@ -97,7 +98,6 @@ contract Lottery {
 
 	// sends 50% of the ETH in contract to the winner and rest of it to the owner
 	function getPrice() returns (uint){
-    // destroys the contact and sends all the money to the address mentioned
     require(owner == msg.sender);
     address winner = winnerAddress();
     if (winner == owner) {
