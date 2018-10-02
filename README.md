@@ -59,3 +59,5 @@
 
 - [Ethereum White Paper](https://github.com/ethereum/wiki/wiki/White-Paper)
 - [Truffle Docs](truffleframework.com/docs/)
+- [CrypotZombies](https://cryptozombies.io/) 
+- [Bitcoin Paper](https://bitcoin.com/bitcoin.pdf)
